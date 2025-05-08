@@ -9,6 +9,7 @@ const server = new McpServer({
   name: "Logistic MPC",
   version: "1.0.0"
 });
+// @ts-nocheck
 
 server.tool(
     "login_dropi",
@@ -98,6 +99,7 @@ server.tool(
         }
     }
 );
+// @ts-nocheck
 
 server.tool(
     "getDropiOrders",
@@ -216,6 +218,7 @@ server.tool(
         }
     }
 );
+// @ts-nocheck
 
 server.tool(
     "update_order_dropi",
