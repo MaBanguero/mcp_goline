@@ -353,15 +353,40 @@ app.post('/mcp', async (req: Request, res: Response) => {
 });
 
 app.get('/mcp', async (req: Request, res: Response) => {
-    console.log('Received GET MCP request');
-    res.writeHead(405).end(JSON.stringify({
-        jsonrpc: "2.0",
-        error: {
-            code: -32000,
-            message: "Method not allowed."
-        },
-        id: null
-    }));
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders(); // Enviar los encabezados inmediatamente
+
+    const server = getServer();
+    const transport: StreamableHTTPServerTransport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: undefined,
+    });
+
+    await server.connect(transport);
+
+    // Manejar el cierre de la conexión del cliente
+    req.on('close', () => {
+        console.log('Client disconnected');
+        transport.close();
+        server.close();
+    });
+
+    // Enviar eventos SSE (ejemplo - deberías integrar tu lógica de CMP aquí)
+    let count = 0;
+    const intervalId = setInterval(() => {
+        const eventData = JSON.stringify({ type: 'update', data: { counter: count++ } });
+        res.write(`data: ${eventData}\n\n`); // Formato requerido para eventos SSE
+    }, 1000);
+
+    // Limpiar el intervalo cuando la conexión se cierra
+    req.on('end', () => {
+        clearInterval(intervalId);
+    });
+
+    // También podrías considerar cómo manejar las peticiones entrantes del cliente
+    // a través de la conexión SSE (si tu CMP lo requiere).
+    transport.handleRequest(req, res, req.body); // Esto podría necesitar ajustes
 });
 
 app.delete('/mcp', async (req: Request, res: Response) => {
