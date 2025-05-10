@@ -6,7 +6,11 @@ const server = new McpServer({
     name: "Logistic MPC",
     version: "1.0.0"
 });
+server.tool("add", { a: z.number(), b: z.number() }, async ({ a, b }) => ({
+    content: [{ type: "text", text: String(a + b) }]
+}));
 // @ts-nocheck
+// @ts-ignore
 server.tool("login_dropi", {
     input: z.object({
         email: z.string().email().describe("Email del usuario"),
@@ -50,45 +54,46 @@ server.tool("login_dropi", {
             const errorText = await response.text();
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: false,
                             error: {
                                 status: response.status,
                                 statusText: response.statusText,
                                 details: errorText
                             }
-                        }
+                        })
                     }]
             };
         }
         const data = await response.json();
         return {
             content: [{
-                    type: "json",
-                    data: {
+                    type: "text",
+                    text: JSON.stringify({
                         success: true,
                         token: data.token
-                    }
+                    }, null, 2)
                 }]
         };
     }
     catch (error) {
         return {
             content: [{
-                    type: "json",
-                    data: {
+                    type: "text",
+                    text: JSON.stringify({
                         success: false,
                         error: {
                             message: "Error en la conexión con Dropi",
                             details: error.message
                         }
-                    }
+                    })
                 }]
         };
     }
 });
 // @ts-nocheck
+// @ts-ignore
 server.tool("getDropiOrders", {
     input: z.object({
         token: z.string().describe("Bearer token de autenticación"),
@@ -144,40 +149,40 @@ server.tool("getDropiOrders", {
                 const errorText = await response.text();
                 return {
                     content: [{
-                            type: "json",
-                            data: {
+                            type: "text",
+                            text: JSON.stringify({
                                 success: false,
                                 error: {
                                     status: response.status,
                                     statusText: response.statusText,
                                     details: errorText
                                 }
-                            }
+                            })
                         }]
                 };
             }
             const data = await response.json();
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: true,
                             data: data
-                        }
+                        })
                     }]
             };
         }
         catch (fetchError) {
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: false,
                             error: {
                                 message: "Error en la conexión con Dropi",
                                 details: fetchError.message
                             }
-                        }
+                        })
                     }]
             };
         }
@@ -185,19 +190,20 @@ server.tool("getDropiOrders", {
     catch (error) {
         return {
             content: [{
-                    type: "json",
-                    data: {
+                    type: "text",
+                    text: JSON.stringify({
                         success: false,
                         error: {
                             message: "Error general en la petición",
                             details: error.message
                         }
-                    }
+                    })
                 }]
         };
     }
 });
 // @ts-nocheck
+// @ts-ignore
 server.tool("update_order_dropi", {
     input: z.object({
         token: z.string().describe("Bearer token de autenticación"),
@@ -238,41 +244,41 @@ server.tool("update_order_dropi", {
                 const errorText = await response.text();
                 return {
                     content: [{
-                            type: "json",
-                            data: {
+                            type: "text",
+                            text: JSON.stringify({
                                 success: false,
                                 error: {
                                     status: response.status,
                                     statusText: response.statusText,
                                     details: errorText
                                 }
-                            }
+                            })
                         }]
                 };
             }
             const data = await response.json();
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: true,
                             data: data,
                             message: `Orden ${order_id} actualizada a estado ${status}`
-                        }
+                        })
                     }]
             };
         }
         catch (fetchError) {
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: false,
                             error: {
                                 message: "Error en la conexión con Dropi",
                                 details: fetchError.message
                             }
-                        }
+                        })
                     }]
             };
         }
@@ -280,14 +286,14 @@ server.tool("update_order_dropi", {
     catch (error) {
         return {
             content: [{
-                    type: "json",
-                    data: {
+                    type: "text",
+                    text: JSON.stringify({
                         success: false,
                         error: {
                             message: "Error general en la petición",
                             details: error.message
                         }
-                    }
+                    })
                 }]
         };
     }

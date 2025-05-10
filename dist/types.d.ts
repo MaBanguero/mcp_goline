@@ -378,21 +378,21 @@ export declare const JSONRPCErrorSchema: z.ZodObject<{
         data?: unknown;
     }>;
 }, "strict", z.ZodTypeAny, {
+    jsonrpc?: "2.0";
+    id?: string | number;
     error?: {
         code?: number;
         message?: string;
         data?: unknown;
     };
-    jsonrpc?: "2.0";
-    id?: string | number;
 }, {
+    jsonrpc?: "2.0";
+    id?: string | number;
     error?: {
         code?: number;
         message?: string;
         data?: unknown;
     };
-    jsonrpc?: "2.0";
-    id?: string | number;
 }>;
 export declare const isJSONRPCError: (value: unknown) => value is JSONRPCError;
 export declare const JSONRPCMessageSchema: z.ZodUnion<[z.ZodObject<{
@@ -583,21 +583,21 @@ export declare const JSONRPCMessageSchema: z.ZodUnion<[z.ZodObject<{
         data?: unknown;
     }>;
 }, "strict", z.ZodTypeAny, {
+    jsonrpc?: "2.0";
+    id?: string | number;
     error?: {
         code?: number;
         message?: string;
         data?: unknown;
     };
-    jsonrpc?: "2.0";
-    id?: string | number;
 }, {
+    jsonrpc?: "2.0";
+    id?: string | number;
     error?: {
         code?: number;
         message?: string;
         data?: unknown;
     };
-    jsonrpc?: "2.0";
-    id?: string | number;
 }>]>;
 /**
  * A response that indicates success but carries no data.

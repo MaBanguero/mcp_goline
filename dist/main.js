@@ -9,6 +9,7 @@ const server = new McpServer({
 });
 // Añade esta tool a tu servidor
 // @ts-nocheck
+// @ts-ignore
 server.tool("list-shopify-products", {
     shop: z.string(),
     accessToken: z.string()
@@ -38,7 +39,9 @@ server.tool("list-shopify-products", {
         const summary = data.products.map(p => `#${p.id}: ${p.title}`).join("\n");
         return {
             content: [
-                { type: "json", text: data.products || { "message": "No hay productos disponibles." } }
+                { type: "text",
+                    text: JSON.stringify(data.products || { "message": "No hay productos disponibles." })
+                }
             ]
         };
     }
@@ -61,6 +64,7 @@ server.tool("list-shopify-products", {
 });
 // Agrega esta tool a tu servidor MCP
 // @ts-nocheck
+// @ts-ignore
 server.tool("search-shopify-products", {
     shop: z.string().describe("Dominio de la tienda Shopify, por ejemplo 'midominio.myshopify.com'"),
     accessToken: z.string().describe("Token privado de acceso a la API de Shopify que autoriza la consulta."),
@@ -107,9 +111,8 @@ server.tool("search-shopify-products", {
                     }]
             };
         }
-        const summary = filtered.map(p => `#${p.id}: ${p.title}`).join("\n");
         return {
-            content: [{ type: "json", data: filtered }]
+            content: [{ type: "text", text: JSON.stringify(filtered) }]
         };
     }
     catch (error) {
@@ -130,6 +133,7 @@ server.tool("search-shopify-products", {
     }
 });
 // @ts-nocheck
+// @ts-ignore
 server.tool("create-shopify-order", {
     orderData: z.object({
         shop: z.string().describe("Dominio de la tienda Shopify donde se creará la orden. Por ejemplo: 'midominio.myshopify.com'"),
@@ -235,6 +239,8 @@ server.tool("create-shopify-order", {
         };
     }
 });
+// @ts-nocheck
+// @ts-ignore
 server.tool("getShopifyAbandonedCarts", {
     storeAccess: z.object({
         shop: z.string().describe("Dominio de la tienda Shopify, por ejemplo 'midominio.myshopify.com'"),
@@ -267,8 +273,8 @@ server.tool("getShopifyAbandonedCarts", {
         const data = await response.json();
         return {
             content: [{
-                    type: "json",
-                    data: data.checkouts || []
+                    type: "text",
+                    text: JSON.stringify({ data: data.checkouts || [] })
                 }]
         };
     }
@@ -281,6 +287,8 @@ server.tool("getShopifyAbandonedCarts", {
         };
     }
 });
+// @ts-nocheck
+// @ts-ignore
 server.tool("getShopifyCustomerById", {
     input: z.object({
         shop: z.string().describe("Dominio de la tienda Shopify"),
@@ -293,13 +301,13 @@ server.tool("getShopifyCustomerById", {
         if (!shop || !shop.includes('.myshopify.com')) {
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: false,
                             error: {
                                 message: "El dominio de la tienda debe ser un dominio válido de Shopify"
                             }
-                        }
+                        })
                     }]
             };
         }
@@ -317,40 +325,40 @@ server.tool("getShopifyCustomerById", {
                 const errorText = await response.text();
                 return {
                     content: [{
-                            type: "json",
-                            data: {
+                            type: "text",
+                            text: JSON.stringify({
                                 success: false,
                                 error: {
                                     status: response.status,
                                     statusText: response.statusText,
                                     details: errorText
                                 }
-                            }
+                            })
                         }]
                 };
             }
             const data = await response.json();
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: true,
                             data: data.customer
-                        }
+                        })
                     }]
             };
         }
         catch (fetchError) {
             return {
                 content: [{
-                        type: "json",
-                        data: {
+                        type: "text",
+                        text: JSON.stringify({
                             success: false,
                             error: {
                                 message: "Error en la conexión con Shopify",
                                 details: fetchError.message
                             }
-                        }
+                        })
                     }]
             };
         }
@@ -358,14 +366,14 @@ server.tool("getShopifyCustomerById", {
     catch (error) {
         return {
             content: [{
-                    type: "json",
-                    data: {
+                    type: "text",
+                    text: JSON.stringify({
                         success: false,
                         error: {
                             message: "Error general en la petición",
                             details: error.message
                         }
-                    }
+                    })
                 }]
         };
     }

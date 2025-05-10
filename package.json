@@ -1,6 +1,6 @@
 {
   "name": "@mcp-server-shopify/run-server",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "MCP server for using the Shopify API",
   "type": "module",
   "main": "dist/index.js",
